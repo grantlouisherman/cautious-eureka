@@ -12,35 +12,31 @@
 use scnr::ScannerBuilder;
 
 static PATTERNS: &[&str] = &[
-    r";",
-    r"0|[1-9][0-9]*",
-    r"=",
-    r""
+    r";",                    // Semicolon
+    r"0|[1-9][0-9]*",        // Number
+    r"//.*(\r\n|\r|\n)",     // Line comment
+    r"/\*([^*]|\*[^/])*\*/", // Block comment
+    r"[a-zA-Z_]\w*",         // Identifier
+    r"=",                    // Assignment
 ];
 
+const INPUT: &str = r#"
+// This is a comment
+int a = 10;
+int b = 20;
+string y = "hello";
+/* This is a block comment
+   that spans multiple lines */
+int c = a;
+"#;
+
 fn main() {
-    let code = r#"
-        int x = 100;
-        int y = 2;
-        string hello = "hello";
-    "#;
-    let split:Vec<_> = code.split("\n").collect();
-    
     let scanner = ScannerBuilder::new()
         .add_patterns(PATTERNS)
         .build()
         .expect("ScannerBuilder error");
-    let mut tokens = vec![];
-    for(_, line) in split.iter().enumerate() {
-        let find_iter = scanner.find_iter(line);
-        for _ma in find_iter {
-            tokens.push(_ma);
-        }
+    let find_iter = scanner.find_iter(INPUT);
+    for ma in find_iter {
+        println!("Match: {:?}: '{}'", ma, &INPUT[ma.span().range()]);
     }
-
-    for token in tokens {
-        println!("{:?}", token);
-
-    }
-
 }

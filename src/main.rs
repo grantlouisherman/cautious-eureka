@@ -8,10 +8,37 @@
  *  operator -> "+"
  *
  * */
-use lalrpop_util::lalrpop_mod;
+use std::env;
+use std::fs;
+use std::io;
 
-lalrpop_mod!(pub scanner);
+
+fn runFile(path: String){
+    let contents = fs::read_to_string(path).expect("Failed to read file");
+    println!("{:?}", contents);
+}
+
+fn runPrompt() {
+    let mut buffer = String::new();
+    while true {
+        io::stdin().read_line(&mut buffer).expect("IO Failed");
+        if buffer.trim() == "exit" {
+            break
+        }
+        buffer.clear();
+    }
+    println!("exit prompt");
+}
+
 
 fn main() {
-    assert!(scanner::TermParser::new().parse("22").is_ok());
+    let args: Vec<String> = env::args().collect();
+    if args.len() > 2 {
+        println!("Usage: jlox [script]");
+    } else if args.len() == 2 {
+        runFile(args[1].clone());
+    } else {
+        runPrompt();
+    }
+
 }

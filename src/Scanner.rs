@@ -1,8 +1,10 @@
+use crate::ErrorHandling;
 
 pub struct Scanner {
-    source: String
+    source: String,
+    pub hadError: bool
 }
-
+#[derive(Debug)]
 pub struct Token {
     tmp_value: String
 }
@@ -10,7 +12,7 @@ pub struct Token {
 impl Scanner {
 
     pub fn new(source: String) -> Self {
-        Self { source }
+        Self { source: source, hadError: false }
     }
 
     pub fn scanTokens(&self) -> Vec<Token> {

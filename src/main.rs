@@ -11,16 +11,21 @@
 use std::env;
 use std::fs;
 use std::io;
+mod Scanner;
 
+use Scanner::{Scanner as ScannerClass, Token};
 
 fn runFile(path: String){
     let contents = fs::read_to_string(path).expect("Failed to read file");
     println!("{:?}", contents);
+    let scanner = ScannerClass::new(contents);
+    let tokens = scanner.scanTokens();
 }
 
 fn runPrompt() {
     let mut buffer = String::new();
-    while true {
+    loop {
+        println!("> ");
         io::stdin().read_line(&mut buffer).expect("IO Failed");
         if buffer.trim() == "exit" {
             break

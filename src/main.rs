@@ -13,12 +13,14 @@ use std::fs;
 use std::io;
 mod Scanner;
 mod ErrorHandling;
+mod TokenType;
+mod Token;
 
-use Scanner::{Scanner as ScannerClass, Token};
+use Scanner::{Scanner as ScannerClass};
 
 fn run(source:String) {
     let scanner = ScannerClass::new(source);
-    let tokens:Vec<Token> = scanner.scanTokens();
+    let tokens:Vec<Token::Token> = scanner.scanTokens();
     for token in tokens {
         println!("{:?}", token);
     }
